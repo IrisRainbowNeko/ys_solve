@@ -1,5 +1,6 @@
 import core.BFSSolver;
 import gui.GUIMain;
+import org.jblas.FloatMatrix;
 import org.yaml.snakeyaml.Yaml;
 import utils.Graph;
 import utils.Vertex;
@@ -23,6 +24,8 @@ public class Main {
         System.out.println(res.vtx);
         System.out.println(res.data);*/
         new GUIMain().showMainFrame();
+        //FloatMatrix fm=new FloatMatrix(2,3, new float[]{1,2,3,4,5,6});
+        //System.out.println(fm);
     }
 
 }

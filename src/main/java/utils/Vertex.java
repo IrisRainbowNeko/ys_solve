@@ -7,17 +7,21 @@ import java.util.List;
 
 public class Vertex {
     public HashMap<String, Integer> vtx=new HashMap<String, Integer>();
-    public LinkedList<String> data=new LinkedList<String>();
+    public HashMap<String, Integer> data=new HashMap<String, Integer>();
     public HashMap<String, Integer> state=new HashMap<String, Integer>();
+    public HashMap<String, Boolean> active=new HashMap<String, Boolean>();
 
-    public Vertex(HashMap<String, Integer> vtx, HashMap<String, Integer> state){
+    public Vertex(HashMap<String, Integer> vtx, HashMap<String, Integer> state, HashMap<String, Boolean> active){
         this.vtx=vtx;
         this.state=state;
+        this.active=active;
+        vtx.forEach((k,v)->data.put(k,0));
     }
-    public Vertex(HashMap<String, Integer> vtx, LinkedList<String> data, HashMap<String, Integer> state){
+    public Vertex(HashMap<String, Integer> vtx, HashMap<String, Integer> data, HashMap<String, Integer> state, HashMap<String, Boolean> active){
         this.vtx=vtx;
         this.data=data;
         this.state=state;
+        this.active=active;
     }
 
     public void inc(String key){
@@ -25,8 +29,15 @@ public class Vertex {
         vtx.put(key, vnext>state.get(key)?1:vnext);
     }
 
+    public void addData(String key){
+        if(!data.containsKey(key))
+            data.put(key, 1);
+        else
+            data.put(key, data.get(key)+1);
+    }
+
     @Override
     public Vertex clone(){
-        return new Vertex((HashMap<String, Integer>)vtx.clone(), (LinkedList<String>)data.clone(), state);
+        return new Vertex((HashMap<String, Integer>)vtx.clone(), (HashMap<String, Integer>)data.clone(), state, active);
     }
 }

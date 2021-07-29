@@ -1,6 +1,8 @@
 package gui;
 
 import core.BFSSolver;
+import core.DFSSolver;
+import core.MatSolver;
 import utils.Graph;
 import utils.Vertex;
 import utils.tool;
@@ -55,9 +57,9 @@ public class GUIMain {
         {
             JMenu menu_file = new JMenu("操作");
             menubar1.add(menu_file);
-            JMenuItem item1 = new JMenuItem("求解");
+            JMenuItem item1 = new JMenuItem("BFS求解");
             item1.addActionListener(e -> {
-                Map<String, Integer> counter=solve(BasePanel.all_nodes);
+                Map<String, Integer> counter=solve(BasePanel.all_nodes, 1);
                 BasePanel.all_nodes.forEach((nv)->{
                     if(counter.containsKey(nv.name))
                         nv.inc_count=counter.get(nv.name);
@@ -65,13 +67,39 @@ public class GUIMain {
                         nv.inc_count=0;
                 });
             });
-            JMenuItem item2 = new JMenuItem("设置状态数");
+            JMenuItem item2 = new JMenuItem("DFS求解");
             item2.addActionListener(e -> {
+                Map<String, Integer> counter=solve(BasePanel.all_nodes, 2);
+                BasePanel.all_nodes.forEach((nv)->{
+                    if(counter.containsKey(nv.name))
+                        nv.inc_count=counter.get(nv.name);
+                    else
+                        nv.inc_count=0;
+                });
+            });
+            JMenuItem item3 = new JMenuItem("方程求解");
+            item3.addActionListener(e -> {
+                Map<String, Integer> counter=solve(BasePanel.all_nodes, 3);
+                BasePanel.all_nodes.forEach((nv)->{
+                    if(counter.containsKey(nv.name))
+                        nv.inc_count=counter.get(nv.name);
+                    else
+                        nv.inc_count=0;
+                });
+            });
+
+
+            JMenuItem item4 = new JMenuItem("设置状态数");
+            item4.addActionListener(e -> {
                 showStateSetFrame();
             });
             menu_file.add(item1);
             menu_file.addSeparator();
             menu_file.add(item2);
+            menu_file.addSeparator();
+            menu_file.add(item3);
+            menu_file.addSeparator();
+            menu_file.add(item4);
             menu_file.addSeparator();
         }
 
@@ -214,10 +242,11 @@ public class GUIMain {
         sframe.setVisible(true);
     }
 
-    public Map<String, Integer> solve(Vector<NodeView> all_nodes){
+    public Map<String, Integer> solve(Vector<NodeView> all_nodes, int type){
         HashMap<String, Integer> vtx=new HashMap<String, Integer>();
         HashMap<String, LinkedList<String>> edge=new HashMap<String, LinkedList<String>>();
         HashMap<String, Integer> state=new HashMap<String, Integer>();
+        HashMap<String, Boolean> active=new HashMap<String, Boolean>();
 
         all_nodes.forEach((nv)->{
             vtx.put(nv.name, nv.getNum());
@@ -225,12 +254,25 @@ public class GUIMain {
             nv.conn_nodes.forEach((cnv)->vlist.add(cnv.name));
             edge.put(nv.name, vlist);
             state.put(nv.name, nv.getState());
+            active.put(nv.name, nv.active);
         });
 
-        Graph gra=new Graph(vtx, edge, state);
-        Vertex res=new BFSSolver().BFS(gra);
-        Map<String, Integer> counter=tool.frequencyOfListElements(res.data);
-        return counter;
+        Graph gra=new Graph(new Vertex(vtx, state, active), edge);
+        Vertex res=null;
+        switch (type){
+            case 1:
+                res=new BFSSolver().solve(gra);
+                break;
+            case 2:
+                res=new DFSSolver().solve(gra);
+                break;
+            case 3:
+                res=new MatSolver().solve(gra);
+                break;
+        }
+
+        //Map<String, Integer> counter=tool.frequencyOfListElements(res.data);
+        return res.data;
     }
 
     //渲染线程

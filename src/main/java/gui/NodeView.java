@@ -18,6 +18,7 @@ public class NodeView extends DPanel {
 
     String name="";
     int num=0, state=3, inc_count=0;
+    boolean active=true;
 
     NumField tx_num, tx_state;
     JLabel la_name;
@@ -71,7 +72,7 @@ public class NodeView extends DPanel {
         add(tx_num);
 
         tx_state=new NumField(state+"");
-        tx_state.setEditable(true);
+        tx_state.setEditable(false);
         tx_state.setBounds((int)(item_size*0.68f-tx_size/2+1), (int)(item_size*0.65f-tx_size/2), (int)tx_size, (int)tx_size);
         tx_state.setHorizontalAlignment(JTextField.CENTER);
         add(tx_state);
@@ -98,8 +99,18 @@ public class NodeView extends DPanel {
             public void mouseExited(MouseEvent e) {}
             public void mouseEntered(MouseEvent e) {}
             public void mouseClicked(MouseEvent e) {
-                if(move_flag)
+                if(e.getButton()==1)
                     choose(!ischoosed());
+                else if(e.getButton()==3) {
+                    active = !active;
+                    if(active){
+                        setColor(Color.black);
+                        setColor_choose(Color.cyan);
+                    } else {
+                        setColor(Color.red);
+                        setColor_choose(Color.magenta);
+                    }
+                }
             }
         });
         addMouseMotionListener(new MouseMotionListener() {
@@ -179,6 +190,8 @@ public class NodeView extends DPanel {
         num=Integer.parseInt(tx_num.getText());
         return num;
     }
+
+
 
     @Override
     public void paint(Graphics g) {

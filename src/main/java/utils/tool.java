@@ -102,4 +102,27 @@ public class tool {
         }
         return map;
     }
+
+    public static <T> void printArray(T[] arr){
+        for (T t : arr) {
+            System.out.print(t);
+            System.out.print("  ");
+        }
+        System.out.println();
+    }
+
+    public static void printArray(int[] arr){
+        for (int t : arr) {
+            System.out.print(t);
+            System.out.print("  ");
+        }
+        System.out.println();
+    }
+    public static void printArray(float[] arr){
+        for (float t : arr) {
+            System.out.print(t);
+            System.out.print("  ");
+        }
+        System.out.println();
+    }
 }
